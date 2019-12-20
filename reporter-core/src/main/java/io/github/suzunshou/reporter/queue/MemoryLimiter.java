@@ -15,7 +15,7 @@ public abstract class MemoryLimiter {
 
     private static final int MAX_TOTAL_MESSAGES = 1000000;
 
-    public static MemoryLimiter maxOf(int maxMessages, ReporterMetrics metrics) {
+    public static MemoryLimiter create(int maxMessages, ReporterMetrics metrics) {
         if (maxMessages <= 0) {
             throw new IllegalArgumentException("maxMessages should be greater than 0.");
         }

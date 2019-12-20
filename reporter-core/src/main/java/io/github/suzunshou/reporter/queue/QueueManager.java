@@ -1,6 +1,5 @@
 package io.github.suzunshou.reporter.queue;
 
-import io.github.suzunshou.reporter.buffer.OverflowStrategy;
 import io.github.suzunshou.reporter.concurrent.timer.HashedWheelTimer;
 import io.github.suzunshou.reporter.concurrent.timer.TimeDriven;
 import io.github.suzunshou.reporter.concurrent.timer.Timeout;

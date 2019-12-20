@@ -1,6 +1,6 @@
 package io.github.suzunshou.reporter.reporter;
 
-import io.github.suzunshou.reporter.buffer.OverflowStrategy;
+import io.github.suzunshou.reporter.queue.OverflowStrategy;
 
 import java.util.concurrent.TimeUnit;
 

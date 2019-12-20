@@ -59,12 +59,6 @@ public final class DefaultAsyncSender<M extends Message, R> implements AsyncSend
         return CompositeFuture.all(promises);
     }
 
-
-    @Override
-    public Component.CheckResult check() {
-        return sender.check();
-    }
-
     @Override
     public void close() throws IOException {
         synchronized (DefaultAsyncSender.class) {

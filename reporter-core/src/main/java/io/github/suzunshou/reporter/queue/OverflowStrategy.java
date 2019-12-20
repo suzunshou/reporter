@@ -1,4 +1,4 @@
-package io.github.suzunshou.reporter.buffer;
+package io.github.suzunshou.reporter.queue;
 
 /**
  * @author zunshou on 2019/11/17 12:56 下午.

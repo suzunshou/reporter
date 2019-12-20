@@ -7,23 +7,4 @@ import java.io.Closeable;
  */
 public interface Component extends Closeable {
 
-    CheckResult check();
-
-    class CheckResult {
-
-        public static final CheckResult OK = new CheckResult(true, null);
-
-        final boolean ok;
-
-        final Exception exception;
-
-        public static CheckResult failed(Exception error) {
-            return new CheckResult(false, error);
-        }
-
-        CheckResult(boolean ok, Exception exception) {
-            this.ok = ok;
-            this.exception = exception;
-        }
-    }
 }

@@ -1,4 +1,4 @@
-package io.github.suzunshou.reporter.buffer;
+package io.github.suzunshou.reporter.queue;
 
 import io.github.suzunshou.reporter.reporter.Message;
 

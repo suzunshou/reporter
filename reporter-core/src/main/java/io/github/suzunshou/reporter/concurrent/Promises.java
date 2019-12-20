@@ -1,7 +1,7 @@
 package io.github.suzunshou.reporter.concurrent;
 
-import io.github.suzunshou.reporter.buffer.MessageDroppedException;
-import io.github.suzunshou.reporter.buffer.OverflowStrategy;
+import io.github.suzunshou.reporter.queue.MessageDroppedException;
+import io.github.suzunshou.reporter.queue.OverflowStrategy;
 import io.github.suzunshou.reporter.reporter.Message;
 
 import java.util.ArrayList;

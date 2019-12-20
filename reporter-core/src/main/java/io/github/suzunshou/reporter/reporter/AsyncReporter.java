@@ -2,8 +2,8 @@ package io.github.suzunshou.reporter.reporter;
 
 import io.github.suzunshou.buffers.Buffer;
 import io.github.suzunshou.buffers.BufferPool;
-import io.github.suzunshou.reporter.buffer.MessageDroppedException;
-import io.github.suzunshou.reporter.buffer.OverflowStrategy;
+import io.github.suzunshou.reporter.queue.MessageDroppedException;
+import io.github.suzunshou.reporter.queue.OverflowStrategy;
 import io.github.suzunshou.reporter.concurrent.Future;
 import io.github.suzunshou.reporter.concurrent.*;
 import io.github.suzunshou.reporter.concurrent.timer.HashedWheelTimer;
@@ -73,7 +73,7 @@ public class AsyncReporter<M extends Message, R> extends TimeDriven<Message.Mess
     AsyncReporter(Builder<M, R> builder) {
         this.sender = new DefaultAsyncSender<>(builder.sender, builder.nThreads);
         this.metrics = builder.metrics;
-        this.memoryLimiter = MemoryLimiter.maxOf(builder.bufferedMaxMessages, metrics);
+        this.memoryLimiter = MemoryLimiter.create(builder.bufferedMaxMessages, metrics);
         this.messageTimeoutNanos = builder.messageTimeoutNanos;
         this.queuedMaxMessages = builder.queuedMaxMessages;
         this.flushThreads = builder.flushThreads;
@@ -314,11 +314,6 @@ public class AsyncReporter<M extends Message, R> extends TimeDriven<Message.Mess
                 }
             }
         });
-    }
-
-    @Override
-    public CheckResult check() {
-        return sender.check();
     }
 
     @Override
