@@ -39,7 +39,6 @@ public class ThreadPool {
             refCnt++;
         }
 
-
         synchronized int getRefCnt() {
             return refCnt;
         }

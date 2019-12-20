@@ -83,7 +83,7 @@ public class QueueManager {
 
     void onCreate(AbstractSizeBoundedQueue queue) {
         if (createCallback != null) {
-            createCallback.call(queue);
+            createCallback.callback(queue);
         }
     }
 

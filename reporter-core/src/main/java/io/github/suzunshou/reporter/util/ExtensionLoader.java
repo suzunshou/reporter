@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * spi loader.
  */
 public final class ExtensionLoader {
+
     private static Map<Class<?>, Object> extensionMap = new ConcurrentHashMap<Class<?>, Object>();
 
     private static Map<Class<?>, List<?>> extensionListMap = new ConcurrentHashMap<Class<?>, List<?>>();

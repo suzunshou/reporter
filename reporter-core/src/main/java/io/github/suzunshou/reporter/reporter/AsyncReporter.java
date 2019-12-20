@@ -2,8 +2,6 @@ package io.github.suzunshou.reporter.reporter;
 
 import io.github.suzunshou.buffers.Buffer;
 import io.github.suzunshou.buffers.BufferPool;
-import io.github.suzunshou.reporter.queue.MessageDroppedException;
-import io.github.suzunshou.reporter.queue.OverflowStrategy;
 import io.github.suzunshou.reporter.concurrent.Future;
 import io.github.suzunshou.reporter.concurrent.*;
 import io.github.suzunshou.reporter.concurrent.timer.HashedWheelTimer;
@@ -87,7 +85,7 @@ public class AsyncReporter<M extends Message, R> extends TimeDriven<Message.Mess
         if (messageTimeoutNanos > 0) {
             this.queueManager.onCreate(new CreateCallback() {
                 @Override
-                public void call(AbstractSizeBoundedQueue queue) {
+                public void callback(AbstractSizeBoundedQueue queue) {
                     schedulePeriodically(queue.key, messageTimeoutNanos);
                 }
             });
@@ -114,7 +112,7 @@ public class AsyncReporter<M extends Message, R> extends TimeDriven<Message.Mess
         }
     }
 
-    public io.github.suzunshou.reporter.concurrent.Future<?> flush(AbstractSizeBoundedQueue queue) {
+    public Future<?> flush(AbstractSizeBoundedQueue queue) {
         CompositeFuture completeFuture;
         Buffer<MessagePromise<?>> buffer = bufferPool.acquire();
         try {
@@ -122,7 +120,6 @@ public class AsyncReporter<M extends Message, R> extends TimeDriven<Message.Mess
             if (drained == 0) {
                 return new SucceededFuture<>(null, null);
             }
-
             List<MessagePromise<R>> promises = buffer.drain();
             completeFuture = sender.send(promises);
         } finally {
@@ -140,9 +137,9 @@ public class AsyncReporter<M extends Message, R> extends TimeDriven<Message.Mess
     }
 
     private void logFailedMessage(CompositeFuture completeFuture) {
-        completeFuture.addListener(new GenericFutureListener<io.github.suzunshou.reporter.concurrent.Future<? super CompositeFuture>>() {
+        completeFuture.addListener(new GenericFutureListener<Future<? super CompositeFuture>>() {
             @Override
-            public void operationComplete(io.github.suzunshou.reporter.concurrent.Future<? super CompositeFuture> future) {
+            public void operationComplete(Future<? super CompositeFuture> future) {
                 if (!future.isSuccess()) {
                     MessageDroppedException droppedException = (MessageDroppedException) future.cause();
                     logger.warn(droppedException.getMessage());
@@ -282,7 +279,7 @@ public class AsyncReporter<M extends Message, R> extends TimeDriven<Message.Mess
             startFlushThreads();
         }
 
-        memoryLimiter.waitWhenMaximum();
+        memoryLimiter.blockWhenMaximum();
 
         AbstractSizeBoundedQueue queue = queueManager.getOrCreate(message.asMessageKey());
         MessagePromise<R> promise = message.newPromise();
@@ -306,9 +303,9 @@ public class AsyncReporter<M extends Message, R> extends TimeDriven<Message.Mess
     }
 
     private void setFailedListener(MessageFuture<R> future) {
-        future.addListener(new GenericFutureListener<io.github.suzunshou.reporter.concurrent.Future<? super R>>() {
+        future.addListener(new GenericFutureListener<Future<? super R>>() {
             @Override
-            public void operationComplete(io.github.suzunshou.reporter.concurrent.Future<? super R> future) {
+            public void operationComplete(Future<? super R> future) {
                 if (!future.isSuccess()) {
                     metrics.incrementMessagesDropped(1);
                 }

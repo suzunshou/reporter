@@ -7,6 +7,11 @@ package io.github.suzunshou.reporter.reporter;
  */
 public interface ReporterMetrics {
 
+    enum MetricKey {
+        messages,
+        messageDropped
+    }
+
     /**
      * Increments count of message attempts, which contain 1 or more spans. Ex POST requests or Kafka
      * messages sent.

@@ -19,7 +19,6 @@ public class ReporterExecutors {
         return DIRECT_EXECUTOR_SERVICE;
     }
 
-
     //direct run command...
     private static final class DirectExecutorService extends AbstractExecutorService {
 
@@ -57,7 +56,6 @@ public class ReporterExecutors {
             command.run();
         }
     }
-
 
     public static ThreadFactory daemonThreadFactory(String namePrefix) {
         return new ReporterThreadFactory(namePrefix);

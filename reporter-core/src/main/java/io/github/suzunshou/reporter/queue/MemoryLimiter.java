@@ -31,13 +31,12 @@ public abstract class MemoryLimiter {
     /**
      * Block current thread if reach the limit until signaled
      */
-    public abstract void waitWhenMaximum();
+    public abstract void blockWhenMaximum();
 
     /**
      * Signal all threads that waiting on this memory limiter
      */
     public abstract void signalAll();
-
 
     public static final class DefaultMemoryLimiter extends MemoryLimiter {
         private static final Logger logger = LoggerFactory.getLogger(DefaultMemoryLimiter.class);
@@ -59,7 +58,7 @@ public abstract class MemoryLimiter {
         }
 
         @Override
-        public void waitWhenMaximum() {
+        public void blockWhenMaximum() {
             if (!isMaximum()) {
                 lock.lock();
                 try {

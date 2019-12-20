@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public final class InMemoryReporterMetrics implements ReporterMetrics {
 
-    public void startExporter(final ReporterMetricsExporter exporter) {
+    private void start(final ReporterMetricsExporter exporter) {
         exporter.start(this);
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
@@ -21,12 +21,7 @@ public final class InMemoryReporterMetrics implements ReporterMetrics {
     }
 
     private InMemoryReporterMetrics(ReporterMetricsExporter exporter) {
-        startExporter(exporter);
-    }
-
-    enum MetricKey {
-        messages,
-        messageDropped
+        start(exporter);
     }
 
     private final ConcurrentHashMap<MetricKey, AtomicLong> metrics = new ConcurrentHashMap<MetricKey, AtomicLong>();
@@ -82,9 +77,9 @@ public final class InMemoryReporterMetrics implements ReporterMetrics {
         }
     }
 
-    static <K> void increment(ConcurrentHashMap<K, AtomicLong> metrics, K key, int quantity) {
+    private static <K> void increment(ConcurrentHashMap<K, AtomicLong> metrics, K key, int quantity) {
         if (quantity == 0) return;
-        while (true) {
+        for (; ; ) {
             AtomicLong metric = metrics.get(key);
             if (metric == null) {
                 metric = metrics.putIfAbsent(key, new AtomicLong(quantity));

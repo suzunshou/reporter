@@ -47,8 +47,7 @@ final class ConcurrentSizeBoundedQueue extends AbstractSizeBoundedQueue {
                 switch (overflowStrategy) {
                     case DropNew:
                         if ((currSize = size.get()) >= maxSize) {
-                            promise.setFailure(MessageDroppedException.dropped(OverflowStrategy.Type.DropNew.getStrategy(),
-                                    promise.message()));
+                            promise.setFailure(MessageDroppedException.dropped(OverflowStrategy.Type.DropNew.getStrategy(), promise.message()));
                         }
                         break;
                     case DropTail:
@@ -72,10 +71,10 @@ final class ConcurrentSizeBoundedQueue extends AbstractSizeBoundedQueue {
                         }
                         continue;
                     case DropBuffer:
-                        List<MessagePromise<?>> promises = removeAll(deque);
+                        List<MessagePromise<?>> promises = dropBuffer(deque);
                         int dropped;
                         if ((dropped = promises.size()) > 0) {
-                            incSize(currSize, -dropped);
+                            size.addAndGet(-dropped);
                         }
                         Promises.allFail(promises, OverflowStrategy.Type.DropBuffer.getStrategy());
                         continue;
@@ -117,15 +116,8 @@ final class ConcurrentSizeBoundedQueue extends AbstractSizeBoundedQueue {
         }
     }
 
-    private void incSize(int expected, int delta) {
-        int prev = expected;
-        while (!size.compareAndSet(prev, prev + delta)) {
-            prev = size.get();
-        }
-    }
-
-    private static List<MessagePromise<?>> removeAll(ConcurrentLinkedDeque<MessagePromise<?>> deque) {
-        final List<MessagePromise<?>> result = new LinkedList<>();
+    private static List<MessagePromise<?>> dropBuffer(ConcurrentLinkedDeque<MessagePromise<?>> deque) {
+        List<MessagePromise<?>> result = new LinkedList<>();
         MessagePromise<?> promise;
         while ((promise = deque.pollFirst()) != null) {
             result.add(promise);

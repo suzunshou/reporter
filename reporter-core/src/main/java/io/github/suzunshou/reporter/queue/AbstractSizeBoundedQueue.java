@@ -57,7 +57,6 @@ public abstract class AbstractSizeBoundedQueue {
      */
     public abstract boolean isEmpty();
 
-
     void recordAccess() {
         lastAccessNanos = System.nanoTime();
     }

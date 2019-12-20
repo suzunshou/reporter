@@ -9,9 +9,8 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class AbstractReporterProperties implements ReporterProperties {
 
-    protected Sender<? extends Message, ?> sender;
     protected String metrics = "noop";
-    protected String metricsExporter = "log";
+    protected String metricsExporter = "noop";
     protected long messageTimeoutNanos = TimeUnit.SECONDS.toNanos(1);
     protected int bufferedMaxMessages = 100;
     protected int queuedMaxMessages = 10000;

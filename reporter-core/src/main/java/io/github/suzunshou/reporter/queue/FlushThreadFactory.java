@@ -26,8 +26,7 @@ public class FlushThreadFactory {
         return threadFactory.newThread(new FlushRunnable());
     }
 
-
-    private void reScheduleAndFlush(AbstractSizeBoundedQueue queue) {
+    private void scheduleAndFlush(AbstractSizeBoundedQueue queue) {
         try {
             while (queue.size() >= reporter.queuedMaxMessages) {
                 if (reporter.scheduler != null) {
@@ -53,7 +52,7 @@ public class FlushThreadFactory {
                     if (queue == null) {
                         continue;
                     }
-                    reScheduleAndFlush(queue);
+                    scheduleAndFlush(queue);
                 }
             } finally {
                 if (AsyncReporter.REPORTER_STATE_UPDATER.get(reporter) == AsyncReporter.REPORTER_STATE_SHUTDOWN) {

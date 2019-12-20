@@ -73,7 +73,7 @@ public class FlushSynchronizer {
         queue.isFull = false;
     }
 
-    public void clear(){
+    public void clear() {
         queue.clear();
     }
 }
