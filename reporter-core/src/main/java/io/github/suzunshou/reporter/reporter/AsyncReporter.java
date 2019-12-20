@@ -1,11 +1,11 @@
 package io.github.suzunshou.reporter.reporter;
 
-import io.github.suzunshou.reporter.buffer.Buffer;
-import io.github.suzunshou.reporter.buffer.BufferPool;
+import io.github.suzunshou.buffers.Buffer;
+import io.github.suzunshou.buffers.BufferPool;
 import io.github.suzunshou.reporter.buffer.MessageDroppedException;
 import io.github.suzunshou.reporter.buffer.OverflowStrategy;
-import io.github.suzunshou.reporter.concurrent.*;
 import io.github.suzunshou.reporter.concurrent.Future;
+import io.github.suzunshou.reporter.concurrent.*;
 import io.github.suzunshou.reporter.concurrent.timer.HashedWheelTimer;
 import io.github.suzunshou.reporter.concurrent.timer.TimeDriven;
 import io.github.suzunshou.reporter.queue.*;
@@ -116,7 +116,7 @@ public class AsyncReporter<M extends Message, R> extends TimeDriven<Message.Mess
 
     public io.github.suzunshou.reporter.concurrent.Future<?> flush(AbstractSizeBoundedQueue queue) {
         CompositeFuture completeFuture;
-        Buffer buffer = bufferPool.acquire();
+        Buffer<MessagePromise<?>> buffer = bufferPool.acquire();
         try {
             int drained = queue.drainTo(buffer);
             if (drained == 0) {

@@ -1,5 +1,6 @@
 package io.github.suzunshou.reporter.queue;
 
+import io.github.suzunshou.buffers.BufferFilter;
 import io.github.suzunshou.reporter.buffer.MessageDroppedException;
 import io.github.suzunshou.reporter.buffer.OverflowStrategy;
 import io.github.suzunshou.reporter.concurrent.MessagePromise;
@@ -64,7 +65,7 @@ final class ConcurrentSizeBoundedQueue extends AbstractSizeBoundedQueue {
                         continue;
                     case DropHead:
                         if (size.compareAndSet(currSize, currSize - 1)) {
-                            MessagePromise<?> head = deque.pollLast();
+                            MessagePromise<?> head = deque.pollFirst();
                             if (head != null) {
                                 head.setFailure(MessageDroppedException.dropped(OverflowStrategy.Type.DropHead.getStrategy(), head.message()));
                             } else {
@@ -135,7 +136,7 @@ final class ConcurrentSizeBoundedQueue extends AbstractSizeBoundedQueue {
     }
 
     @Override
-    public int drainTo(MessageFilter filter) {
+    public int drainTo(BufferFilter<MessagePromise<?>> filter) {
         MessagePromise<?> promise;
         int drained = 0;
 
@@ -165,7 +166,7 @@ final class ConcurrentSizeBoundedQueue extends AbstractSizeBoundedQueue {
 
     @Override
     public int clear() {
-        return drainTo(new MessageFilter() {
+        return drainTo(new BufferFilter<MessagePromise<?>>() {
             @Override
             public boolean accept(MessagePromise<?> promise) {
                 return true;

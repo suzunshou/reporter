@@ -1,5 +1,6 @@
 package io.github.suzunshou.reporter.queue;
 
+import io.github.suzunshou.buffers.BufferFilter;
 import io.github.suzunshou.reporter.concurrent.MessagePromise;
 import io.github.suzunshou.reporter.reporter.Message;
 
@@ -33,7 +34,7 @@ public abstract class AbstractSizeBoundedQueue {
      * @param filter
      * @return
      */
-    public abstract int drainTo(MessageFilter filter);
+    public abstract int drainTo(BufferFilter<MessagePromise<?>> filter);
 
     /**
      * clear all messages in the queue.
