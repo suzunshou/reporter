@@ -74,7 +74,7 @@ final class ConcurrentSizeBoundedQueue extends AbstractSizeBoundedQueue {
                         List<MessagePromise<?>> promises = dropBuffer(deque);
                         int dropped;
                         if ((dropped = promises.size()) > 0) {
-                            size.addAndGet(-dropped);
+                            incSize(currSize, -dropped);
                         }
                         Promises.allFail(promises, OverflowStrategy.Type.DropBuffer.getStrategy());
                         continue;
@@ -123,6 +123,13 @@ final class ConcurrentSizeBoundedQueue extends AbstractSizeBoundedQueue {
             result.add(promise);
         }
         return result;
+    }
+
+    private void incSize(int expected, int delta) {
+        int prev = expected;
+        while (!size.compareAndSet(prev, prev + delta)) {
+            prev = size.get();
+        }
     }
 
     @Override
