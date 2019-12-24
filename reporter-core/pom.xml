@@ -7,11 +7,11 @@
     <parent>
         <artifactId>reporter</artifactId>
         <groupId>io.github.suzunshou</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0-RELEASE</version>
     </parent>
 
     <artifactId>reporter-core</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0-RELEASE</version>
 
     <properties>
         <jctools.version>2.1.2</jctools.version>
