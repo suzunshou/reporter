@@ -1,6 +1,6 @@
 # reporter
 
-This is an high performance reporter-sender framework.
+This is a high performance reporter-sender framework.
 ```xml
 <dependency>
   <groupId>io.github.suzunshou</groupId>
